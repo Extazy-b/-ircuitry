@@ -1,0 +1,582 @@
+\documentclass[12pt,a4paper]{article}
+
+% -----------------------------------
+% Подключение необходимых пакетов
+% -----------------------------------
+\usepackage[utf8]{inputenc}        % Кодировка UTF-8
+\usepackage[T2A]{fontenc}          % Поддержка кириллицы
+\usepackage[russian]{babel}        % Русский язык
+
+\usepackage{amsmath, amssymb}      % Математические символы
+\usepackage{geometry}              % Настройка полей страницы
+\usepackage{graphicx}              % Вставка изображений
+\usepackage{float}                 % Управление положением картинок
+\usepackage{caption}               % Подписи к рисункам
+\usepackage{circuitikz}            % Рисование электрических схем
+\usepackage{hyperref}              % Ссылки внутри документа
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Настройка полей страницы
+\geometry{top=2cm,bottom=2cm,left=2cm,right=2cm}
+
+\title{Домашнее задание №1}
+\author{Есиков Сергей Дмитриевич}
+\date{07.09.2025}
+
+\begin{document}
+	\maketitle
+	\section*{Мостовые цепи.}
+	\section*{Задача 1}
+		\begin{figure}[H]
+			\centering
+			\begin{circuitikz}[scale=1.5, american]
+				% Узлы
+				\coordinate (C) at (0,-1); 
+				\coordinate (B) at (1,-2); 
+				\coordinate (A) at (1,0);  
+				\coordinate (D) at (2,-1);  
+				\coordinate (Oc) at (0.6,-1); 
+				\coordinate (Od) at (1.3,-1);  
+				\coordinate (Va) at (-0.5,0); 
+				\coordinate (Vb) at (-0.5,-2);  
+				
+				% Подписи узлов
+				\node[above] at (Oc) {c};
+				\node[above] at (Od) {d};
+				\node[left] at (Va) {a};
+				\node[left] at (Vb) {b};
+				
+				% Резисторы
+				\draw (C) to[R=$R_1$] (A);
+				\draw (B) to[R=$R_2$] (C);
+				\draw (D) to[R=$R_4$] (B);
+				\draw (A) to[R=$R_3$] (D);
+				
+				% Источник
+				\draw (Vb) to[isource,l=$V_s$] (Va);
+				\draw (Va) to[short] (A);
+				\draw (Vb) to[short] (B);
+		
+				% Съем напряжения
+				\draw (Oc) to[short, -*] (C);
+				\draw (Od) to[short, -*] (D);
+			\end{circuitikz}
+		\end{figure}
+		При каком соотношении сопротивлений резисторов мост Уитстона
+		сбалансирован?
+
+	\subsection*{Решение}
+	Будем искать решение через анализ потенциалов во всех узлах
+	
+	$U_{a} = 0$
+	
+	$U_{b} = U_{s}$	
+	
+	2. Мост Уитсона сбалансирован, значит напряжение между узлами c и d равно нулю:
+	
+	$U_{cd} = 0$
+	
+	$U_{cd} = U_{d} - U_{c}$
+
+	3. По первому з-ну Кирхгофа:
+	
+	$0 = I_{d} = i_{ad} + i_{bd} = \frac{U_{ad}}{R_3} + \frac{U_{bd}}{R_4}$
+	
+	$0 = \frac{U_d - U_a}{R_3} + \frac{U_d - U_b}{R_4}$
+	
+	$0 = \frac{U_d}{R_3} + \frac{U_d - U_s}{R_4}$
+	
+	$\frac{U_s}{R_4} = U_d \cdot \left(\frac{1}{R_4} + \frac{1}{R_3}\right) = $
+	$U_{d} \cdot \frac{R_3 + R_4}{R_3 R_4}$
+	
+	$U_{d} = \frac{U_s R_3 R_4}{R_4 \left(R_3 + R_4\right)} = U_s \cdot \frac{R_3}{R_3 + R_4}$
+	
+	4. Аналогично
+	
+	$U_c = U_s \cdot \frac{R_1}{R_1 + R_2}$
+	
+	5. Тогда
+	
+	$U_{cd} = U_s \cdot \left[\frac{R_3}{R_3 + R_4} - \frac{R_1}{R_1 + R_2}\right] = U_s \cdot \frac{R_2 R_3 - R_1 R_4}{\left(R_3 + R_4\right) \cdot \left(R_1 + R_2\right)}$
+	
+	Получаем
+	
+	$U_{cd} = 0 \Leftrightarrow R_2 R_3 = R_1 R_4 \Leftrightarrow \frac{R_1}{R_2} = \frac{R_3}{R_4}$
+	
+
+	\section*{Задача 2}
+			\begin{figure}[H]
+		\centering
+		\begin{circuitikz}[scale=1.5, american]
+			% Узлы
+			\coordinate (C) at (0,-1); 
+			\coordinate (B) at (1,-2); 
+			\coordinate (A) at (1,0);  
+			\coordinate (D) at (2,-1);  
+			\coordinate (Oc) at (0.6,-1); 
+			\coordinate (Od) at (1.3,-1);  
+			\coordinate (Va) at (-0.5,0); 
+			\coordinate (Vb) at (-0.5,-2);  
+			
+			% Подписи узлов
+			\node[above] at (Oc) {c};
+			\node[above] at (Od) {d};
+			\node[left] at (Va) {a};
+			\node[left] at (Vb) {b};
+			
+			% Резисторы
+			\draw (C) to[R=$R$] (A);
+			\draw (B) to[R=$R + \Delta R$] (C);
+			\draw (D) to[R=$R$] (B);
+			\draw (A) to[R=$R$] (D);
+			
+			% Источник
+			\draw (Vb) to[isource,l=$V_s$] (Va);
+			\draw (Va) to[short] (A);
+			\draw (Vb) to[short] (B);
+			
+			% Съем напряжения
+			\draw (Oc) to[short, -*] (C);
+			\draw (Od) to[short, -*] (D);
+		\end{circuitikz}
+		\begin{circuitikz}[scale=1.5, american]
+			% Узлы
+			\coordinate (C) at (0,-1); 
+			\coordinate (B) at (1,-2); 
+			\coordinate (A) at (1,0);  
+			\coordinate (D) at (2,-1);  
+			\coordinate (Oc) at (0.6,-1); 
+			\coordinate (Od) at (1.3,-1);  
+			\coordinate (Va) at (-0.5,0); 
+			\coordinate (Vb) at (-0.5,-2);  
+			
+			% Подписи узлов
+			\node[above] at (Oc) {c};
+			\node[above] at (Od) {d};
+			\node[left] at (Va) {a};
+			\node[left] at (Vb) {b};
+			
+			% Резисторы
+			\draw (C) to[R=$R$] (A);
+			\draw (B) to[R=$R + \Delta R$] (C);
+			\draw (D) to[R=$R$] (B);
+			\draw (A) to[R=$R + \Delta R	$] (D);
+			
+			% Источник
+			\draw (Vb) to[isource,l=$V_s$] (Va);
+			\draw (Va) to[short] (A);
+			\draw (Vb) to[short] (B);
+			
+			% Съем напряжения
+			\draw (Oc) to[short, -*] (C);
+			\draw (Od) to[short, -*] (D);
+		\end{circuitikz}
+	\end{figure}
+	Мост Уитстона питают стабилизированным напряжением V.
+	Получите и сравните формулы, связывающие напряжение U на диагонали моста с приращением сопротивления $\Delta R$ в нижнем плече моста и в
+	другом случае – для моста с одинаковыми приращениями сопротивлений $\Delta R$ в нижнем и верхнем плечах моста.
+	
+	\subsection*{Решение}
+	Пользуясь выводом прошлой задачи, подставим
+	
+	В первом случае:
+	
+	$U_{cd} = U_s \cdot \frac{\left(R + \Delta R\right) R - R^2}{2R \cdot \left(2R + \Delta R\right)} = U_s \cdot \frac{R \Delta R}{4R^2 + 2R \Delta R}$
+	
+	Во втором случае:
+	
+	$U_{cd} = U_s \cdot \frac{\left(R + \Delta R\right)^2 - R^2}{\left(2R + \Delta R\right)^2} 
+	= U_s \cdot \left[1 - \left(\frac{R}{2R + \Delta R}\right)^2\right]$
+	
+	\section*{Задача 3}
+	\begin{figure}[H]
+		\centering
+		\begin{circuitikz}[scale=1.5, american]
+			% Узлы
+			\coordinate (C) at (0,-1); 
+			\coordinate (B) at (1,-2); 
+			\coordinate (A) at (1,0);  
+			\coordinate (D) at (2,-1);  
+			\coordinate (Oc) at (0.6,-1); 
+			\coordinate (Od) at (1.3,-1);   
+			
+			% Подписи узлов
+			\node[left] at (C) {c};
+			\node[right] at (D) {d};
+			\node[above] at (A) {a};
+			\node[below] at (B) {b};
+			
+			% Резисторы
+			\draw (C) to[R=$R$] (A);
+			\draw (B) to[R=$2R$] (C);
+			\draw (D) to[R=$8R$] (B);
+			\draw (A) to[R=$4R$] (D);
+			\draw (C) to[R=$R$] (D);
+			
+		\end{circuitikz}
+	\end{figure}
+	Вычислите сопротивление на входе мостовой схемы.
+	\subsection*{Решение}
+	Для упрощения вычислений прибегнем к матричной форме законов Кирхгофа
+	\begin{itemize}
+		\item $V$ — вектор узловых потенциалов относительно выбранного опорного узла (земли);
+		\item $A$ — матрица проводимостей (составленная из сопротивлений сети);
+		\item $I$ — вектор внешних токов, поступающих в узлы от источников.
+	\end{itemize}
+	
+	Элементы матрицы $A = (a_{ij})$ определяются следующим образом:
+	\[
+	a_{ij} =
+	\begin{cases}
+		\displaystyle \sum\limits_{k \neq i} g_{ik}, & \text{если } i=j, \\[1.5ex]
+		\displaystyle -g_{ij}, & \text{если } i \neq j \text{ и узлы $i$ и $j$ соединены резистором с проводимостью } g_{ij}, \\[1.5ex]
+		0, & \text{если соединения между $i$ и $j$ нет.}
+	\end{cases}
+	\]
+	
+	Закон Кирхгофа для токов (KCL) в узловой форме записывается так:
+	\[
+	A V = I .
+	\]
+	
+	Применяя это на вышеизложенную схему, получаем:
+	\[
+	\begin{bmatrix}
+		\frac{1}{R_{ac}} + \frac{1}{R_{bc}} + \frac{1}{R_{cd}} & -\frac{1}{R_{cd}} \\[2ex]
+		-\frac{1}{R_{cd}} & \frac{1}{R_{ad}} + \frac{1}{R_{bd}} + \frac{1}{R_{cd}}
+	\end{bmatrix}
+	\begin{bmatrix} V_c \\ V_d \end{bmatrix}
+	=
+	\begin{bmatrix}
+		\frac{V_a}{R_{ac}} + \frac{V_b}{R_{bc}} \\[2ex]
+		\frac{V_a}{R_{ad}} + \frac{V_b}{R_{bd}}
+	\end{bmatrix}.
+	\]
+	
+	Тогда:
+	\[V = \frac{1}{\det(A)}
+	\begin{bmatrix}
+		\dfrac{1}{R_{ad}} + \dfrac{1}{R_{bd}} + \dfrac{1}{R_{cd}} & \dfrac{1}{R_{cd}} \\[2ex]
+		\dfrac{1}{R_{cd}} & \dfrac{1}{R_{ac}} + \dfrac{1}{R_{bc}} + \dfrac{1}{R_{cd}}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\dfrac{V_a}{R_{ac}} + \dfrac{V_b}{R_{bc}} \\[2ex]
+		\dfrac{V_a}{R_{ad}} + \dfrac{V_b}{R_{bd}}
+	\end{bmatrix}
+	\], где
+	
+	\[\det(A) =
+	\left(\dfrac{1}{R_{ac}} + \dfrac{1}{R_{bc}} + \dfrac{1}{R_{cd}}\right)
+	\left(\dfrac{1}{R_{ad}} + \dfrac{1}{R_{bd}} + \dfrac{1}{R_{cd}}\right)
+	- \left(\dfrac{1}{R_{cd}}\right)^2.
+	\]
+	
+	Подставляя все значения, получаем:
+	
+	\[V = \frac{1}{\det(A)}
+	\begin{bmatrix}
+		\dfrac{1}{4R} + \dfrac{1}{8R} + \dfrac{1}{R} & \dfrac{1}{R} \\[2ex]
+		\dfrac{1}{R} & \dfrac{1}{R} + \dfrac{1}{2R} + \dfrac{1}{R}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\dfrac{V_a}{R} + \dfrac{V_b}{2R} \\[2ex]
+		\dfrac{V_a}{4R} + \dfrac{V_b}{8R}
+	\end{bmatrix}
+	\],где
+	
+	\[
+	\det(A) =
+	\left(\dfrac{1}{R} + \dfrac{1}{2R} + \dfrac{1}{R}\right)
+	\left(\dfrac{1}{4R} + \dfrac{1}{8R} + \dfrac{1}{R}\right)
+	- \left(\dfrac{1}{R}\right)^2.
+	\]
+	
+	Упрощаем:
+	
+	\[
+	\det(A) =
+	\dfrac{5}{2R} \cdot \dfrac{11}{8R} - \dfrac{1}{R^2} = 
+	\dfrac{39}{16R^2}
+	\]
+	
+	\[
+	V = \frac{16R^2}{39}
+	\begin{bmatrix}
+		\dfrac{11}{8R} & \dfrac{1}{R} \\[2ex]
+		\dfrac{1}{R} & \dfrac{5}{2R}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\dfrac{V_a}{R} + \dfrac{V_b}{2R} \\[2ex]
+		\dfrac{V_a}{4R} + \dfrac{V_b}{8R}
+	\end{bmatrix}
+	\]
+	
+	
+	\[
+	\boxed{\,V_c = V_d = \frac{2V_a + V_b}{3}\,}
+	\]
+	
+	
+	Ток через узел a
+	\[
+	I_a = \frac{V_a - V_c}{R_{ac}} + \frac{V_a - V_d}{R_{ad}}.
+	\]
+	\[
+	I_a = \frac{V_a - \tfrac{2V_a+V_b}{3}}{R} + \frac{V_a - \tfrac{2V_a+V_b}{3}}{4R}.
+	\]
+	
+	Упрощая:
+	
+	\[
+	I_a = \frac{V_a - V_b}{3}\left(\frac{1}{R}+\frac{1}{4R}\right)
+	= \frac{5}{12R}(V_a - V_b).
+	\]
+	
+	Следовательно, эквивалентное сопротивление:
+	
+	\[
+	R_{ab} = \frac{V_a - V_b}{I_a} = \frac{12}{5}R.
+	\]
+	
+	\[
+	\boxed{R_{ab} = 2.4R}
+	\]
+	
+	
+	\section*{Переходной процесс.}
+	\section*{Задача 4}
+	\begin{figure}[H]
+		\centering
+		\begin{circuitikz}[scale=1.6, american]
+			% Узлы
+			\coordinate (A) at (0,-0.6); 
+			\coordinate (B) at (0,0.4); 
+			\coordinate (C) at (1,0.4);  
+			\coordinate (D) at (1,-0.6); 
+			
+			% Элементы
+			\draw (A) to[isource, l=$U$] (B);
+			\draw (B) to[capacitor, C=$C$] (C);
+			\draw (C) to[resistor, R=$R$] (D);
+			\draw (D) to[short] (A);
+		\end{circuitikz}
+		\begin{circuitikz}[scale=1.6, american]
+			% Узлы
+			\coordinate (A) at (0,0); 
+			\coordinate (B) at (0,1); 
+			\coordinate (C) at (1,1);  
+			\coordinate (D) at (1,0); 
+			
+			% Элементы
+			\draw (A) to[isource, l=$U$] (B);
+			\draw (B) to[inductor, L=$L$] (C);
+			\draw (C) to[resistor, R=$R$] (D);
+			\draw (D) to[short] (A);
+		\end{circuitikz}
+	\end{figure}
+	К цепям (см. рисунки) в момент t = 0 подключают источник постоянной
+	ЭДС. Начальные условия нулевые: при t < 0 напряжение на емкости, ток через
+	индуктивность равны нулю. Постройте качественно графики поведения во
+	времени токов и напряжений на элементах.
+	
+	\subsection*{Решение RC-цепь}
+	По з-ну Кирхгофа:
+	
+	\[
+	U=u_C(t)+i(t)R	
+	\]
+	
+	Ток через конденсатор:
+	
+	\[
+	i(t)=C\dfrac{du_C}{dt}
+	\]
+	
+	Получаем:
+	\[
+	U=u_C(t)+RC\dfrac{du_C}{dt}
+	\]
+	\[
+	\dfrac{1}{RC}u_C(t)+\dfrac{du_C}{dt} = 	\dfrac{U}{RC}
+	\]
+	
+	Решив диф-ур получаем
+	\[
+	u(t) = U (1 - e^{-t/RC})
+	\]
+	\[
+	i(t)=C\dfrac{du_C}{dt} = \dfrac{U}{R} e^{-t/RC}
+	\]
+	
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=5cm,
+			axis lines=middle,
+			xlabel={$t$}, ylabel={$u_C, i$},
+			ymin=0, ymax=1.2,
+			xtick=\empty, ytick=\empty,
+			legend pos=outer north east
+			]
+			\addplot[blue, thick, domain=0:5, samples=100] {1 - exp(-x)};
+			\addlegendentry{$u_C(t)$}
+			
+			\addplot[red, dashed, thick, domain=0:5, samples=100] {exp(-x)};
+			\addlegendentry{$i(t)$}
+		\end{axis}
+	\end{tikzpicture}	
+	\subsection*{RL - цепь}
+	
+	По з-ну Кирхгофа:
+	\[
+	U=i(t)R + L\dfrac{i(t)}{dt}
+	\]
+	
+	Получаем аналогично:
+	\[
+	i(t) = \dfrac{U}{R}(1 - e^{-Rt/L})
+	\]
+	\[
+	u_L(t) = U e^{-Rt/L}
+	\]
+	
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=5cm,
+			axis lines=middle,
+			xlabel={$t$}, ylabel={$i, u_L$},
+			ymin=0, ymax=1.2,
+			xtick=\empty, ytick=\empty,
+			legend pos=outer north east
+			]
+			\addplot[blue, thick, domain=0:5, samples=100] {1 - exp(-x)};
+			\addlegendentry{$i(t)$}
+			
+			\addplot[red, dashed, thick, domain=0:5, samples=100] {exp(-x)};
+			\addlegendentry{$u_L(t)$}
+		\end{axis}
+	\end{tikzpicture}
+	\section*{Принцип суперпозиции}
+	\section*{Задача 5}
+	\begin{figure}[H]
+		\centering
+		\begin{circuitikz}[american, scale = 1.3]
+			\draw (0, 3) to[R=$R_1$] (0, 0);
+			\draw[->] (-0.5, 2) -- (-0.5, 1) node[left] {$u_1$};
+			
+			\draw (4, 0) to[R=$R_4$] (4, 3);
+			\draw[->] (4.5, 2) -- (4.5, 1) node[right] {$u_4$};
+			
+			\draw (2, 2) to[R=$R_2$, above] (0, 3);
+			\draw (4, 3) to[R=$R_3$, above] (2, 2);
+			
+			\draw (4, 0) to[short] (0, 0);
+			
+			\draw (0, 3) to[isource, l=$i$] (4, 3);
+			\draw (2, 2) to[vsource, l_=$e$, 
+			bipoles/vsourceam/inner plus=e,
+			bipoles/vsourceam/inner minus=0
+			] (2, 0);
+			
+			\draw (2, 0) node[ground] (2, -1) {};
+		\end{circuitikz}
+	\end{figure}
+	
+	Выведите формулу для напряжения u4, используя принцип суперпозиции
+	
+	\subsection*{Решение}
+	Рассмотрим вклад каждого источника по отдельности, представив, что второй источник неактивен
+	
+	\subsection*{Нулевой ток $i = 0$}
+		\begin{figure}[H]
+		\centering
+		\begin{circuitikz}[american, scale = 1]
+			\draw (0, 0) to[R=$R_2$] (2, 2);
+			\draw (2, 2) to[R=$R_1$] (4, 0);
+			\draw (2, -2) to[R=$R_4$] (4, 0);		
+			\draw (0, 0) to[R=$R_3$] (2, -2);
+			
+			\draw (4, 0) -- (4.5, 0) node[above] {0};
+			\draw (-0.5, 0) -- (0, 0) node[above] {e};
+		\end{circuitikz}
+	\end{figure}
+	
+	По закону Ома:
+	
+	$U^e_{\text{общ}} = e$
+	
+	$U^e_{12} = U^e_{34} = U^e_\text{общ} = e$
+	
+	$R^e_{34} = R_3 + R_4$
+	
+	$I^e_{34} = \dfrac{U^e_{34}}{R^e_{34}} = \dfrac{e}{R_3 + R_4}$
+	
+	$I^e_4 = I^e_3 = I^e_{34}$
+	
+	$U^e_4 = I^e_4 \cdot R_4 = \dfrac{R_4 \cdot e}{R_3 + R_4}$
+	
+	\[
+	\boxed{U^e_4 = \dfrac{R_4 \cdot e}{R_3 + R_4}}
+	\]
+
+
+	\subsection*{Нулевой ЭДС $e = 0$}
+	\begin{figure}[H]
+		\centering
+		\begin{circuitikz}[american, scale = 1.3]
+			\draw (-0.5, 0) -- (0, 0) node[above] {0};
+			
+			\draw (0, 0) to[short] (1, 1) to[R=$R_2$] (2, 1) to[short] (3, 0);
+			\draw (0, 0) to[short] (1, -1) to[R=$R_1$] (2, -1) to[short] (3, 0);
+			
+			\draw (3, 0) to[isource, l=$i$] (4, 0);			
+			
+			\draw (4, 0) to[short] (5, 1) to[R=$R_3$] (6, 1) to[short] (7, 0);
+			\draw (4, 0) to[short] (5, -1) to[R=$R_4$] (6, -1) to[short] (7, 0);
+			
+			\draw (7, 0) -- (7.5, 0) node[above] {0};
+		\end{circuitikz}
+	\end{figure}
+	
+	По закону Кирхгофа:
+	
+	$I^i_3 + I^i_4 = i$
+	
+	$\frac{U^i_3}{R_3} + \frac{U^i_4}{R_4} = i$
+	
+	$i = \frac{U^i_4}{R_3} + \frac{U^i_4}{R_4} = U^i_4 \cdot \frac{R_3 + R_4}{R_3 R_4} $
+	
+	\[
+	\boxed{U^i_4 = \dfrac{i \cdot R_3 \cdot R_4}{R_3 + R_4}}
+	\]
+	
+	
+	\subsection*{Результат}
+	Суммируя, получаем
+	
+	$U_4 = U^e_4 + U^i_4 = \dfrac{R_4 \cdot e}{R_3 + R_4} + \dfrac{i \cdot R_3 \cdot R_4}{R_3 + R_4}$
+	
+	\[
+	\boxed{U_4 = \dfrac{R_4 \cdot (e + i R_3)}{R_3 + R_4}}
+	\]
+	
+	\section{Задача 6}
+		\begin{figure}[H]
+		\centering
+		\begin{circuitikz}[american, scale = 2]
+			\draw (0, 0) to[isource, l=$e_1$] (0, 2) -- (3, 2) to[isource, l=$e_2$, invert] (3, 0) to[R=$R_4$] (0, 0);
+			\draw (0, 0) to[R=$R_1$] (1.5, 1);
+			\draw (1.5, 1) to[R=$R_2$] (3, 0);
+			\draw (1.5, 1) to[R=$R_3$] (1.5, 2);
+		\end{circuitikz}
+		\end{figure}
+		В схеме $e_1$ = 160 мB, $e_2$ = 100 мB, $R_1$ = $R_2$ = 100 Ом, $R_3$ = $R_4$ = 400 Ом.
+		
+		Выясните: 
+		
+		а. значения токов в ветвях; 
+		
+		б. при каком значении ЭДС $e_1$ нет тока в ветви с $R_4$?
+	
+\end{document}
